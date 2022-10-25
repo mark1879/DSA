@@ -12,4 +12,13 @@ echo ${curr_work_path}
 cmake ..
 make
 
-${build_dir_path}/bin/test_array
+# ${build_dir_path}/bin/adjust_array
+
+bin_path=${build_dir_path}/bin/
+for file in ${bin_path}/*
+do 
+    if test -f ${file}
+    then
+        ${file}
+    fi
+done
