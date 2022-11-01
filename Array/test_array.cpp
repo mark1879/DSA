@@ -25,8 +25,6 @@ int main() {
         EXPECT_EQ(arr.capacity(), (i / 10 + 1) * 10);
     }
 
-    show_arr(arr);
-
     // pop_back
     int old_size = arr.size();
     arr.pop_back();

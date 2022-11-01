@@ -9,5 +9,8 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
 find_package(GTest REQUIRED)
 include_directories(${GTEST_INCLUDE_DIRS})
 
+include_directories(common/)
+
 add_subdirectory(B+Tree/)
 add_subdirectory(Array/)
+add_subdirectory(LinkedList/)
