@@ -12,7 +12,7 @@ echo ${curr_work_path}
 cmake ..
 make
 
-# ${build_dir_path}/bin/test_linked_list
+# ${build_dir_path}/bin/test_singly_linked_list
 
 bin_path=${build_dir_path}/bin/
 for file in ${bin_path}/*

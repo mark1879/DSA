@@ -1,0 +1,4 @@
+
+add_executable(test_singly_linked_list test_singly_linked_list.cpp)
+target_link_libraries(test_singly_linked_list ${GTEST_BOTH_LIBRARIES})
+
