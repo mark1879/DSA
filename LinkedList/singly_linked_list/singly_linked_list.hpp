@@ -10,9 +10,9 @@ struct Node {
     T data_;
     Node* next_;
 
-    Node() : data_(0), next_(nullptr) { }
-    Node(T t) : data_(t), next_(nullptr) { }
-    Node(T t, Node *next) : data_(t), next_(next){ }
+    Node() : next_(nullptr) {}
+    Node(T t) : data_(t), next_(nullptr) {}
+    Node(T t, Node *next) : data_(t), next_(next){}
 };
 
 template <typename T>
@@ -54,11 +54,11 @@ SinglyLinkedList<T>::SinglyLinkedList() : size_(0) {
 
 template<typename T>
 SinglyLinkedList<T>::~SinglyLinkedList() {
-    Node<T>* p = head_->next_;
+    Node<T>* cur = head_->next_;
         
-    while (p != nullptr) {
-        Node<T>* tmp = p;
-        p = p->next_;
+    while (cur != nullptr) {
+        Node<T>* tmp = cur;
+        cur = cur->next_;
         delete tmp;
     }
 
@@ -70,12 +70,12 @@ SinglyLinkedList<T>::~SinglyLinkedList() {
 
 template<typename T>
 void SinglyLinkedList<T>::PushBack(const T& value) {
-    Node<T>* curr = head_;
+    Node<T>* cur = head_;
 
-    while (curr->next_ != nullptr)
-        curr = curr->next_;
+    while (cur->next_ != nullptr)
+        cur = cur->next_;
     
-    curr->next_ = new Node<T>(value);
+    cur->next_ = new Node<T>(value);
     ++size_;
     
     LOG_INFO("%s, size of list: %u.", __FUNCTION__, size_);
@@ -83,17 +83,17 @@ void SinglyLinkedList<T>::PushBack(const T& value) {
 
 template<typename T>
 void SinglyLinkedList<T>::PopBack() {
-    Node<T>* curr = head_;
+    Node<T>* cur = head_;
     Node<T>* prev = head_;
 
-    while (curr->next_ != nullptr) {
-        prev = curr;
-        curr = curr->next_;
+    while (cur->next_ != nullptr) {
+        prev = cur;
+        cur = cur->next_;
     }
 
-    if (curr != head_) {
+    if (cur != head_) {
         prev->next_ = nullptr;
-        delete curr;
+        delete cur;
         --size_;
     }
 
@@ -174,11 +174,11 @@ void SinglyLinkedList<T>::Remove(const T& value) {
 
 template<typename T>
 void SinglyLinkedList<T>::Clear() {
-    Node<T>* curr = head_;
+    Node<T>* cur = head_;
 
-    while (curr->next_ != nullptr) {
-        Node<T>* tmp = curr->next_;
-        curr->next_ = curr->next_->next_;
+    while (cur->next_ != nullptr) {
+        Node<T>* tmp = cur->next_;
+        cur->next_ = cur->next_->next_;
         delete tmp;
     }
 

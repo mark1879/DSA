@@ -15,7 +15,7 @@ void show_arr(Array<long>& arr) {
 
 int main() {
 
-    cout << endl << "test_array..." << endl;
+    cout << "<<<<<< test_array..." << endl;
 
     Array<long> arr;
     for (int i = 0; i < 20; i++) {
@@ -50,7 +50,7 @@ int main() {
     arr.get(1, val);
     EXPECT_NE(val, 100);
 
-    cout << "done!" << endl << endl;
+    cout << "test done!" << endl << endl;
     
     return 0;
 }
