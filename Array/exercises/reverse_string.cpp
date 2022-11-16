@@ -24,7 +24,7 @@ void Reverse(string& str) {
 
 int main() {
 
-    cout << endl << "test reverse_string..." << endl;
+    cout << endl << "<<<<<< test reverse_string..." << endl;
 
     string str = "I";
     Reverse(str);

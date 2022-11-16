@@ -44,7 +44,7 @@ void AdjustArray(vector<int>& vec) {
 
 int main() {
 
-    cout << endl << "test adjust_array..." << endl;
+    cout << endl << "<<<<<< test adjust_array..." << endl;
 
     vector<int> vec = {1, 2};
     AdjustArray(vec);

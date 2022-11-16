@@ -9,6 +9,7 @@
 
 enum class LogLevel : std::uint8_t {
     kInfo,
+    kWarning,
     kError,
     kFatal,
     kDebug
@@ -31,6 +32,9 @@ public:
         {
         case LogLevel::kInfo:
             std::cout << "[INFO]";
+            break;
+        case LogLevel::kWarning:
+            std::cout << "[WARNING]";
             break;
         case LogLevel::kError:
             std::cout << "[ERROR]";
@@ -59,6 +63,15 @@ private:
     do { \
         Logger &logger = Logger::Instance(); \
         logger.set_log_level(LogLevel::kInfo); \
+        char buf[BUF_LEN] = {0}; \
+        snprintf(buf, BUF_LEN, log_msg_format, ##__VA_ARGS__); \
+        logger.Log(buf); \
+    } while(0) 
+
+#define LOG_WARNING(log_msg_format, ...) \
+    do { \
+        Logger &logger = Logger::Instance(); \
+        logger.set_log_level(LogLevel::kWarning); \
         char buf[BUF_LEN] = {0}; \
         snprintf(buf, BUF_LEN, log_msg_format, ##__VA_ARGS__); \
         logger.Log(buf); \
