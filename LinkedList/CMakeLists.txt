@@ -1,3 +1,4 @@
 add_subdirectory(singly_linked_list/)
 add_subdirectory(circular_linked_list/)
 add_subdirectory(doubly_linked_list/)
+add_subdirectory(doubly_circular_linked_list/)
