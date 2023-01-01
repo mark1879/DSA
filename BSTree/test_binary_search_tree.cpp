@@ -47,8 +47,15 @@ void CheckInOrder(BSTree<int>* tree, const std::vector<int>& keys)
     //     std::cout << it << "\t";
 
     // std::cout << std::endl;
-}
 
+    // std::cout << "LevelOrder: " << std::endl;
+    // std::vector<int> level_order_keys;
+    // tree->LevelOrder(level_order_keys);
+    // for (auto it : level_order_keys)
+    //     std::cout << it << "\t";
+
+    // std::cout << std::endl;
+}
 
 void Test(BSTree<int>*& tree, std::vector<int> keys) 
 {
@@ -56,26 +63,37 @@ void Test(BSTree<int>*& tree, std::vector<int> keys)
     for (int i = 0, size = (int)keys.size(); i < size; i++)
         EXPECT_EQ(tree->Query(keys[i]), true);
     CheckInOrder(tree, keys);
+    EXPECT_EQ(tree->Height(), 3);
 
     tree->Remove(1);
     EXPECT_EQ(tree->Query(1), false);
     keys.erase(std::find(keys.begin(), keys.end(), 1));
     CheckInOrder(tree, keys);
+    EXPECT_EQ(tree->Height(), 3);
 
     tree->Remove(3);
     EXPECT_EQ(tree->Query(3), false);
     keys.erase(std::find(keys.begin(), keys.end(), 3));
     CheckInOrder(tree, keys);
+    EXPECT_EQ(tree->Height(), 3);
 
     tree->Remove(6);
     EXPECT_EQ(tree->Query(6), false);
     keys.erase(std::find(keys.begin(), keys.end(), 6));
     CheckInOrder(tree, keys);
+    EXPECT_EQ(tree->Height(), 3);
 
     tree->Remove(4);
     EXPECT_EQ(tree->Query(4), false);
     keys.erase(std::find(keys.begin(), keys.end(), 4));
     CheckInOrder(tree, keys);
+    EXPECT_EQ(tree->Height(), 3);
+
+    tree->Remove(5);
+    EXPECT_EQ(tree->Query(5), false);
+    keys.erase(std::find(keys.begin(), keys.end(), 5));
+    CheckInOrder(tree, keys);
+    EXPECT_EQ(tree->Height(), 2);
 }
 
 

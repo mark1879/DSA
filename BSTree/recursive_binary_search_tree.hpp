@@ -56,6 +56,20 @@ public:
         PostOrder(root_, keys);
     }
 
+    void LevelOrder(std::vector<T>& keys) override
+    {
+        unsigned int height = Height();
+        for (unsigned int i = 0; i < height; i++)
+        {
+            LevelOrder(root_, i, keys);
+        }
+    }
+
+    unsigned int Height() override 
+    {
+        return Height(root_);
+    }
+
 private:
     BSTNode<T>* Insert(BSTNode<T>* node, const T& key) 
     {
@@ -167,6 +181,32 @@ private:
             Destroy(node->right_);
     
         delete node;
+    }
+
+    unsigned int Height(const BSTNode<T>* node)
+    {
+        if (node == nullptr)
+            return 0;
+
+        unsigned int left_depth = Height(node->left_);
+        unsigned int right_depth = Height(node->right_);
+
+        return left_depth > right_depth ? left_depth + 1 : right_depth + 1;
+    }
+
+    void LevelOrder(const BSTNode<T>* node, unsigned int i, std::vector<T>& keys)
+    {
+        if (node == nullptr)
+            return;
+
+        if (i == 0)
+        {
+            keys.push_back(node->key_);
+            return;
+        }
+
+        LevelOrder(node->left_, i - 1, keys);
+        LevelOrder(node->right_, i - 1, keys);
     }
 };
 

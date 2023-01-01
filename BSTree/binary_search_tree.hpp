@@ -36,6 +36,9 @@ public:
     virtual void PreOrder(std::vector<T>& keys) = 0;
     virtual void InOrder(std::vector<T>& keys) = 0;
     virtual void PostOrder(std::vector<T>& keys) = 0;
+    virtual void LevelOrder(std::vector<T>& keys) = 0;
+
+    virtual unsigned int Height() = 0;
 };
 
 #endif

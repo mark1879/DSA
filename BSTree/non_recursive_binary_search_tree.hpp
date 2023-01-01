@@ -2,6 +2,7 @@
 #define NON_RECURSIVE_BINARY_SEARCH_TREE_HPP
 #include "binary_search_tree.hpp"
 #include <stack>
+#include <queue>
 
 /**
  * Implemented by Non Recursion
@@ -190,6 +191,60 @@ public:
                 }
             }
         }
+    }
+
+    void LevelOrder(std::vector<T>& keys) override
+    {
+        if (root_ == nullptr)
+            return;
+
+        std::queue<BSTNode<T>*> q;
+        q.push(root_);
+
+        while (!q.empty())
+        {
+            BSTNode<T>* front = q.front();
+            q.pop();
+
+            keys.push_back(front->key_);
+
+            if (front->left_ != nullptr)
+                q.push(front->left_);
+            
+            if (front->right_ != nullptr)
+                q.push(front->right_);
+        }
+    }
+
+    unsigned int Height() override
+    {
+        if (root_ == nullptr)
+            return 0;
+
+        std::queue<BSTNode<T>*> q;
+        q.push(root_);
+
+        unsigned int depth = 0;
+
+        while (!q.empty())
+        {
+            size_t size = q.size();
+            for (size_t i = 0; i < size; i++)
+            {
+                BSTNode<T>* front = q.front();
+                q.pop();
+
+                if (front->left_)
+                    q.push(front->left_);
+                
+                if (front->right_)
+                    q.push(front->right_);
+            }
+
+            ++depth;
+        }
+
+        return depth;
     }
 };
 
