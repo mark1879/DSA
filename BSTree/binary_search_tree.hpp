@@ -6,7 +6,6 @@ template <typename T>
 class BSTNode{
 public:
     T key_;
-    BSTNode *parent_;
     BSTNode *left_;
     BSTNode *right_;
     
