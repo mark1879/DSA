@@ -8,8 +8,8 @@
 #include <algorithm>
 #include <fstream>
 #include <unordered_set>
-#include "Utils.hpp"
-#include "Logger.hpp"
+#include "utils.hpp"
+#include "logger.hpp"
 
 using namespace std;
 

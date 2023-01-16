@@ -3,7 +3,7 @@
 
 #include <string>
 #include <iostream>
-#include "Timestamp.hpp"
+#include "timestamp.hpp"
 
 #define ENABLE_LOG 0
 

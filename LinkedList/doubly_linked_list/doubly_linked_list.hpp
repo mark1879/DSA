@@ -1,7 +1,7 @@
 #ifndef DOUBLY_LINKED_LIST_HPP
 #define DOUBLY_LINKED_LIST_HPP
 #include <iostream>
-#include "Logger.hpp"
+#include "logger.hpp"
 
 using namespace std;
 
