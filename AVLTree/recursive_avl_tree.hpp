@@ -1,9 +1,8 @@
 #ifndef RECURSIVE_AVL_TREE_HPP
 #define RECURSIVE_AVL_TREE_HPP
 #include <algorithm>
-#include <iostream>
+#include <cmath>
 #include "avl_tree.hpp"
-#include "Logger.hpp"
 
 template<typename T>
 class RAVLTree : public AVLTree<T> {
@@ -42,11 +41,6 @@ public:
         InOrder(root_, keys);
     }
 
-    void PreOrder(std::vector<T>& keys) const override 
-    {
-        PreOrder(root_, keys);
-    }
-
 private:
     int Height(const AVLTNode<T>* node) const 
     {
@@ -58,7 +52,7 @@ private:
         if (node == nullptr)
             return true;
         
-        return abs(IsBalance(node->left_) - IsBalance(node->right_)) <= 1
+        return abs(Height(node->left_) - Height(node->right_)) <= 1
                 && IsBalance(node->left_) && IsBalance(node->right_);
     }
 
@@ -69,16 +63,6 @@ private:
             InOrder(node->left_, keys);
             keys.push_back(node->key_);
             InOrder(node->right_, keys);
-        }
-    }
-
-    void PreOrder(const AVLTNode<T>* node, std::vector<T>& keys) const
-    {
-        if (node != nullptr) 
-        {
-            keys.push_back(node->key_);
-            PreOrder(node->left_, keys);
-            PreOrder(node->right_, keys);
         }
     }
 
@@ -139,7 +123,8 @@ private:
      *      \
      *       20
      */
-    AVLTNode<T>* LeftRotate(AVLTNode<T>* node) {
+    AVLTNode<T>* LeftRotate(AVLTNode<T>* node) 
+    {
         AVLTNode<T>* child = node->right_;
         node->right_ = child->left_;
         child->left_ = node;
@@ -157,7 +142,8 @@ private:
      *    \
      *     8
      */
-    AVLTNode<T>* LeftBalance(AVLTNode<T>* node) {
+    AVLTNode<T>* LeftBalance(AVLTNode<T>* node) 
+    {
         node->left_ = LeftRotate(node->left_);
         return RightRotate(node);
     }
@@ -169,9 +155,28 @@ private:
      *    /
      *  12
      */
-    AVLTNode<T>* RightBalance(AVLTNode<T>* node) {
+    AVLTNode<T>* RightBalance(AVLTNode<T>* node) 
+    {
         node->right_ = RightRotate(node->right_);
         return LeftRotate(node);
+    }
+
+    void Adjust(AVLTNode<T>*& node)
+    {
+        if (Height(node->left_) - Height(node->right_) > 1)
+        {
+            if (Height(node->left_->left_) >= Height(node->left_->right_))
+                node = RightRotate(node);
+            else
+                node = LeftBalance(node);
+        }
+        else if (Height(node->right_) - Height(node->left_) > 1)
+        {
+            if (Height(node->right_->right_) >= Height(node->right_->left_))
+                node = LeftRotate(node);
+            else
+                node = RightBalance(node);
+        }
     }
 
     AVLTNode<T>* Insert(AVLTNode<T>* node, const T& key) 
@@ -182,24 +187,12 @@ private:
         if (key < node->key_)
         {
             node->left_ = Insert(node->left_, key);
-            if (Height(node->left_) - Height(node->right_) > 1)
-            {
-                if (Height(node->left_->left_) >= Height(node->left_->right_))
-                    node = RightRotate(node);
-                else
-                    node = LeftBalance(node);
-            }
+            Adjust(node);
         }
         else if (key > node->key_)
         {
             node->right_ = Insert(node->right_, key);
-            if (Height(node->right_) - Height(node->left_) > 1)
-            {
-                if (Height(node->right_->right_) >= Height(node->right_->left_))
-                    node = LeftRotate(node);
-                else
-                    node = RightBalance(node);
-            }
+            Adjust(node);
         }
 
         node->height_ = std::max(Height(node->left_), Height(node->right_)) + 1;
@@ -214,27 +207,12 @@ private:
         if (key < node->key_) 
         {
             node->left_ = Remove(node->left_, key);
-
-            if (Height(node->right_) - Height(node->left_) > 1) 
-            {
-                if (Height(node->right_->right_) >= Height(node->right_->left_)) 
-                    node = LeftRotate(node);
-                else
-                    node = RightBalance(node);
-            }
-
+            Adjust(node);
         } 
         else if (key > node->key_) 
         {
             node->right_ = Remove(node->right_, key);
-
-            if (Height(node->left_)  - Height(node->right_) > 1) 
-            {
-                if (Height(node->left_->left_) >= Height(node->left_->right_)) 
-                    node = RightRotate(node);
-                else 
-                    node = LeftBalance(node);
-            }
+            Adjust(node);
         } 
         else 
         {

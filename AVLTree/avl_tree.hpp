@@ -1,8 +1,6 @@
 #ifndef AVL_TREE_HPP
 #define AVL_TREE_HPP
 #include <iostream>
-#include <cmath>
-#include <algorithm>
 #include <vector>
 
 template<typename T>
@@ -35,7 +33,6 @@ public:
     virtual bool IsBalance() const = 0;
 
     virtual void InOrder(std::vector<T>& keys) const = 0;
-    virtual void PreOrder(std::vector<T>& keys) const = 0;
 };
 
 #endif
