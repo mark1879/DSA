@@ -1,4 +1,5 @@
 #include "recursive_avl_tree.hpp"
+#include "non_recursive_avl_tree.hpp"
 #include <gtest/gtest.h>
 
 enum class Implementation
@@ -6,7 +7,6 @@ enum class Implementation
     Recursion,
     Nonrecursion
 };
-
 
 void CheckInOrder(const AVLTree<int>* tree, const std::vector<int>& source_in_order_keys)
 {
@@ -20,7 +20,6 @@ void CheckInOrder(const AVLTree<int>* tree, const std::vector<int>& source_in_or
     }
 }
 
-
 void TestRemoval(std::vector<int> source_keys, std::vector<int> source_in_order_keys, int reomve_key, Implementation impl)
 {
     EXPECT_EQ(source_keys.size(), source_in_order_keys.size());
@@ -28,6 +27,8 @@ void TestRemoval(std::vector<int> source_keys, std::vector<int> source_in_order_
     AVLTree<int>* tree = nullptr;
     if (impl == Implementation::Recursion)
         tree = new RAVLTree<int>();
+    else if (impl == Implementation::Nonrecursion)
+        tree = new NRAVLTree<int>();
 
     for (auto key : source_keys)
     {
@@ -45,7 +46,6 @@ void TestRemoval(std::vector<int> source_keys, std::vector<int> source_in_order_
     delete tree;
 }
 
-
 void TestInsertion(std::vector<int> source_keys, std::vector<int> source_in_order_keys, Implementation impl) 
 {
     EXPECT_EQ(source_keys.size(), source_in_order_keys.size());
@@ -53,6 +53,8 @@ void TestInsertion(std::vector<int> source_keys, std::vector<int> source_in_orde
     AVLTree<int>* tree = nullptr;
     if (impl == Implementation::Recursion)
         tree = new RAVLTree<int>();
+    else if (impl == Implementation::Nonrecursion)
+        tree = new NRAVLTree<int>();
 
     for (auto key : source_keys) {
         tree->Insert(key);
@@ -67,12 +69,23 @@ void TestInsertion(std::vector<int> source_keys, std::vector<int> source_in_orde
 
 void Test(Implementation impl)
 {
+    // right rotate
     TestInsertion({10, 6, 3}, {3, 6, 10}, impl);
-    TestInsertion({10, 6, 15, 3, 8, 7}, {3, 6, 7, 8, 10, 15}, impl);
+
+    // left rotate
     TestInsertion({10, 15, 20}, {10, 15, 20}, impl);
-    TestInsertion({10, 15, 8, 20, 14, 13}, {8, 10, 13, 14, 15, 20}, impl);
+
+    // left balance
     TestInsertion({10, 6, 8}, {6, 8, 10}, impl);
+
+    // right balance
     TestInsertion({10, 15, 12}, {10, 12, 15}, impl);
+
+    // right balance
+    TestInsertion({10, 6, 15, 3, 8, 7}, {3, 6, 7, 8, 10, 15}, impl);
+
+    // left balance
+    TestInsertion({10, 15, 8, 20, 13, 14}, {8, 10, 13, 14, 15, 20}, impl);
 
 
     // delete left child, right balance
@@ -108,6 +121,7 @@ int main()
     std::cout << "<<<<<< test_avl_tree..." << std::endl;
 
     Test(Implementation::Recursion);
+    Test(Implementation::Nonrecursion);
 
     std::cout << "test done!" << std::endl;
 
