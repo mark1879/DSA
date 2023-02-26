@@ -1,14 +1,14 @@
 #ifndef QUICK_SORT_HPP
 #define QUICK_SORT_HPP
 
-void quick_sort_(int* data, unsigned int left, unsigned int right)
+void quick_sort_(int* data, int left, int right)
 {
     if (left >= right)
         return;
 
     int middle = data[left];
-    unsigned int i = left;
-    unsigned int j = right;
+    int i = left;
+    int j = right;
 
     while (i < j)
     {
@@ -33,7 +33,7 @@ void quick_sort_(int* data, unsigned int left, unsigned int right)
     quick_sort_(data, i + 1, right);
 }
 
-bool quick_sort(int* data, unsigned int size_of_data)
+bool quick_sort(int* data, int size_of_data)
 {
     if (data == nullptr)
         return false;

@@ -4,7 +4,7 @@
 #include "bubble_sort.hpp"
 #include "quick_sort.hpp"
 
-int* GenerateTestData(unsigned int size_of_data)
+int* GenerateTestData(int size_of_data)
 {
     int *data = (int *)malloc(size_of_data * sizeof(int));
     EXPECT_NE(data, nullptr);
@@ -12,7 +12,7 @@ int* GenerateTestData(unsigned int size_of_data)
     memset(data, 0, size_of_data * sizeof(int));
 
     srand((unsigned) time(nullptr));
-    for (unsigned i = 0; i < size_of_data; i++)
+    for (int i = 0; i < size_of_data; i++)
     {
         data[i] = rand() % size_of_data;
     }
@@ -20,7 +20,7 @@ int* GenerateTestData(unsigned int size_of_data)
     return data;
 }
 
-void Test(const char* sort_name, const int* data, unsigned int size_of_data, bool(*sort_func)(int *, unsigned int)) 
+void Test(const char* sort_name, const int* data, int size_of_data, bool(*sort_func)(int *, int)) 
 {
     std::cout << "test " << sort_name << "..." << std::endl;
 
@@ -39,7 +39,7 @@ void Test(const char* sort_name, const int* data, unsigned int size_of_data, boo
 
     std::cout << "time consumed: " << (end_time.count() - start_time.count()) << "ms" << std::endl;
 
-    for (unsigned i = 0; i < size_of_data - 1; i++)
+    for (int i = 0; i < size_of_data - 1; i++)
         EXPECT_EQ(copy_of_data[i] <= copy_of_data[i + 1], true);
 
     free(copy_of_data);
@@ -49,15 +49,15 @@ void Test(const char* sort_name, const int* data, unsigned int size_of_data, boo
 
 int main()
 {
-    std::cout << "test sort algorithms:" << std::endl << std::endl;
+    std::cout << "test sort algorithms..." << std::endl << std::endl;
 
-    unsigned int size_of_data = 1000 * 100;
+    int size_of_data = 1000 * 10;
 
     int* data = GenerateTestData(size_of_data);
 
-    Test("bubble sort", data, size_of_data, (bool(*)(int *, unsigned int))bubble_sort);
+    Test("bubble sort", data, size_of_data, (bool(*)(int *, int))bubble_sort);
 
-    Test("quick sort", data, size_of_data, (bool(*)(int*, unsigned int))quick_sort);
+    Test("quick sort", data, size_of_data, (bool(*)(int*, int))quick_sort);
 
     free(data);
 

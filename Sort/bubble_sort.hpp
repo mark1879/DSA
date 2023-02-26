@@ -1,7 +1,7 @@
 #ifndef BUBBLE_SORT_HPP
 #define BUBBLE_SORT_HPP
 
-bool bubble_sort(int* data, unsigned int size_of_data)
+bool bubble_sort(int* data, int size_of_data)
 {
     if (data == nullptr)
         return false;
