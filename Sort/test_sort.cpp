@@ -3,6 +3,7 @@
 #include <gtest/gtest.h>
 #include "bubble_sort.hpp"
 #include "quick_sort.hpp"
+#include "heap_sort.hpp"
 
 int* GenerateTestData(int size_of_data)
 {
@@ -51,13 +52,19 @@ int main()
 {
     std::cout << "test sort algorithms..." << std::endl << std::endl;
 
-    int size_of_data = 1000 * 10;
+    int size_of_data = 1000 * 30;
 
     int* data = GenerateTestData(size_of_data);
 
-    Test("bubble sort", data, size_of_data, (bool(*)(int *, int))bubble_sort);
+    // Test the stability of the sorting algorithm
+    // for (int i = 0; i < size_of_data; i++)
+    //     data[i] = size_of_data - i;
 
-    Test("quick sort", data, size_of_data, (bool(*)(int*, int))quick_sort);
+    Test("bubble sort", data, size_of_data, (bool(*)(int *, int))BubbleSort);
+
+    Test("quick sort", data, size_of_data, (bool(*)(int*, int))QuickSort);
+
+    Test("heap sort", data, size_of_data, (bool(*)(int*, int))HeapSort);
 
     free(data);
 

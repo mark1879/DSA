@@ -1,7 +1,7 @@
 #ifndef QUICK_SORT_HPP
 #define QUICK_SORT_HPP
 
-void quick_sort_(int* data, int left, int right)
+void _QuickSort(int* data, int left, int right)
 {
     if (left >= right)
         return;
@@ -29,16 +29,16 @@ void quick_sort_(int* data, int left, int right)
     data[left] = data[i];
     data[i] = middle;
 
-    quick_sort_(data, left, i - 1);
-    quick_sort_(data, i + 1, right);
+    _QuickSort(data, left, i - 1);
+    _QuickSort(data, i + 1, right);
 }
 
-bool quick_sort(int* data, int size_of_data)
+bool QuickSort(int* data, int size_of_data)
 {
-    if (data == nullptr)
+    if (data == nullptr || size_of_data <= 0)
         return false;
 
-    quick_sort_(data, 0, size_of_data - 1);
+    _QuickSort(data, 0, size_of_data - 1);
 
     return true;
 }
