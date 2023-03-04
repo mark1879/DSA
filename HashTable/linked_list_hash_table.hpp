@@ -13,19 +13,22 @@ public:
     , load_factor_(load_factor)
     , prime_index_(0)
     {
+        load_factor_ = std::max(load_factor_, 0.5);
+        load_factor_ = std::min(load_factor_, 0.99);
+
         table_.resize(primes_[prime_index_]);
     }
 
     ~LLHashTable()
     {}
 
-    void Insert(int key) override
+    bool Insert(size_t key) override
     {
         double factor = (used_bucket_num_ * 1.0 / table_.size());
         if ( factor > load_factor_)
             Expand();
 
-        int index = key % table_.size();
+        size_t index = key % table_.size();
         if (table_[index].empty())
         {
             used_bucket_num_++;
@@ -37,11 +40,13 @@ public:
             if (it == table_[index].end())
                 table_[index].emplace_front(key);
         }
+
+        return true;
     }
 
-    void Erase(int key) override
+    void Erase(size_t key) override
     {
-        int index = key % table_.size();
+        size_t index = key % table_.size();
         auto it = std::find(table_[index].begin(), table_[index].end(), key);
         if (it != table_[index].end())
         {
@@ -51,9 +56,9 @@ public:
         }
     }
 
-    bool Find(int key) const override
+    bool Find(size_t key) const override
     {
-        int index = key % table_.size();
+        size_t index = key % table_.size();
         auto it = std::find(table_[index].begin(), table_[index].end(), key);
 
         return it != table_[index].end();
@@ -63,7 +68,7 @@ private:
     void Expand()
     {
         prime_index_++;
-        if (prime_index_ == kPrimeNum)
+        if (prime_index_ == kPrimeSize)
             throw("hash table can't be expanded!");
 
         used_bucket_num_ = 0;
@@ -92,11 +97,11 @@ private:
     double load_factor_;
     size_t prime_index_;
 
-    static const int kPrimeNum = 10;
-    static size_t primes_[kPrimeNum];
+    static const size_t kPrimeSize = 10;
+    static size_t primes_[kPrimeSize];
 };
 
-size_t LLHashTable::primes_[kPrimeNum] = {3, 7, 23, 47, 97, 251, 443, 911, 1471, 42773};
+size_t LLHashTable::primes_[kPrimeSize] = {3, 7, 23, 47, 97, 251, 443, 911, 1471, 42773};
 
 #endif
 

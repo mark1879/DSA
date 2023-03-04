@@ -6,9 +6,9 @@ public:
     HashTable() {}
     virtual ~HashTable() { }
 
-    virtual void Insert(int key) = 0;
-    virtual void Erase(int key) = 0;
-    virtual bool Find(int key) const = 0;
+    virtual bool Insert(size_t key) = 0;
+    virtual void Erase(size_t key) = 0;
+    virtual bool Find(size_t key) const = 0;
 };
 
 
