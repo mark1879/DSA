@@ -30,6 +30,9 @@ int main()
     PriorityQueue<int>* max_heap = new MaxHeap<int>();
     TestCase(max_heap, data, {10, 9, 9, 8, 8, 7, 4, 3, 1, 1});
 
+    delete(min_heap);
+    delete(max_heap);
+
     std::cout << "test done!" << std::endl << std::endl;
 
     return 0;
