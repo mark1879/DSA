@@ -20,15 +20,15 @@ public:
 };
 
 template<typename T>
-class LinkedStack : public Stack<T>
+class StackByLinkedList : public Stack<T>
 {
 public:
-    LinkedStack() : size_(0)
+    StackByLinkedList() : size_(0)
     {
         head_ = new StackNode<T>();
     }
 
-    ~LinkedStack()
+    ~StackByLinkedList()
     {
         StackNode<T>* iter = head_->next_;
         while (iter != nullptr)

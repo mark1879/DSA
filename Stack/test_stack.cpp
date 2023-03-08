@@ -1,5 +1,5 @@
 #include "stack.hpp"
-#include "linked_stack.hpp"
+#include "stack_by_linked_list.hpp"
 #include <iostream>
 #include <gtest/gtest.h>
 
@@ -32,8 +32,8 @@ int main()
 {
     std::cout << "test_stack..." << std::endl;
 
-    Stack<int>* linked_stack = new LinkedStack<int>();
-    TestCase(linked_stack);
+    Stack<int>* stack_by_linked_list = new StackByLinkedList<int>();
+    TestCase(stack_by_linked_list);
 
     std::cout << "test done!" << std::endl;
 
