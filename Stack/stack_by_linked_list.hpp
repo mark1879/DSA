@@ -10,7 +10,7 @@ public:
     StackNode *next_;
 
 public:
-    StackNode()
+    StackNode() : next_(nullptr)
     {}
 
     StackNode(const T& val, StackNode* next)
@@ -52,26 +52,19 @@ public:
         return size_;
     }
 
-    bool Push(const T& val) override
+    void Push(const T& val) override
     {
-        if (size_ > kMaxSize)
-            return false;
-
         StackNode<T>* new_node = new StackNode<T>(val, head_->next_);
         head_->next_ = new_node;
         ++size_;
-
-        return true;
     }
 
-    bool Top(T& val) const override
+    T Top() const override
     {
         if (size_ == 0)
-            return false;
+            throw("StackByLinkedList::Top(), stack is empty!");
 
-        val = head_->next_->val_;
-        
-        return true;
+        return head_->next_->val_;
     }
 
     void Pop() override
@@ -88,7 +81,6 @@ public:
 private:
     size_t size_;
     StackNode<T>* head_;
-    const size_t kMaxSize = 10000;
 };
 
 

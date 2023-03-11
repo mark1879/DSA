@@ -6,8 +6,16 @@
 void TestCase(Stack<int>*& stack)
 {
     EXPECT_EQ(stack->Empty(), true);
-    int top;
-    EXPECT_EQ(stack->Top(top), false);
+    EXPECT_EQ(stack->Size(), 0);
+
+    try 
+    {
+        const int top = stack->Top();
+    }
+    catch (const char* msg) 
+    {
+        std::cerr << msg << std::endl;
+    }
 
     for (int i = 0; i < 100; i++)
     {
@@ -18,14 +26,14 @@ void TestCase(Stack<int>*& stack)
 
     for (int i = 99; i >= 0; i--)
     {
-        EXPECT_EQ(stack->Top(top), true);
-        EXPECT_EQ(top, i);
+        EXPECT_EQ(stack->Empty(), false);
+        EXPECT_EQ(stack->Top(), i);
         stack->Pop();
         EXPECT_EQ(stack->Size(), i);
     }
 
     EXPECT_EQ(stack->Empty(), true);
-    EXPECT_EQ(stack->Top(top), false);
+    EXPECT_EQ(stack->Size(), 0);
 }
 
 
@@ -77,14 +85,14 @@ void TestObjectDestructed()
 
 int main()
 {
-    // std::cout << "test_stack..." << std::endl;
+    std::cout << "test_stack..." << std::endl;
 
-    // Stack<int>* stack_by_linked_list = new StackByLinkedList<int>();
-    // TestCase(stack_by_linked_list);
+    Stack<int>* stack_by_linked_list = new StackByLinkedList<int>();
+    TestCase(stack_by_linked_list);
+    
+    delete stack_by_linked_list;
 
-    // std::cout << "test done!" << std::endl;
-
-   TestObjectDestructed();
+    std::cout << "test done!" << std::endl;
 
     return 0;
 }
