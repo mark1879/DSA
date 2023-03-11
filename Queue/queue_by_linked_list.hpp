@@ -76,7 +76,7 @@ public:
     T Front() const override
     {
         if (size_ == 0)
-            throw("QueueByLinkedList::Front(), Error: queue is empty!");
+            throw("QueueByLinkedList::Front(), queue is empty!");
 
         return front_->next_->val_;
     }
@@ -84,7 +84,7 @@ public:
     T Back() const override
     {
         if (size_ == 0)
-            throw("QueueByLinkedList::Front(), Error: queue is empty!");
+            throw("QueueByLinkedList::Front(), queue is empty!");
 
         return back_->val_;
     }
