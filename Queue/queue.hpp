@@ -11,8 +11,8 @@ public:
     virtual size_t Size() const = 0;
     virtual void Push(const T&) = 0;
     virtual void Pop() = 0;
-    virtual const T& Front() const = 0;
-    virtual const T& Back() const = 0;
+    virtual T Front() const = 0;
+    virtual T Back() const = 0;
 };
 
 
