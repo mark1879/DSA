@@ -3,7 +3,8 @@
 #include <iostream>
 
 /**
-*  将内存分配、回收对象构造、析构分离
+*  将内存分配、回收 跟 对象构造、析构分离
+*  适用于使用连续内存（数组）当存储空间的容器
 */
 template<typename T>
 struct Allocator

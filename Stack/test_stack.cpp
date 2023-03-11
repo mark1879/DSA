@@ -28,14 +28,63 @@ void TestCase(Stack<int>*& stack)
     EXPECT_EQ(stack->Top(top), false);
 }
 
+
+class Test
+{
+public:
+    Test(std::string name = "head")
+        : name_(name)
+    {
+        std::cout << "Test(), name: " << name_ << std::endl;
+    }
+
+    ~Test()
+    {
+        std::cout << "~Test(), name: " << name_ << std::endl;
+    }
+
+    Test(const Test& obj)
+    {
+        this->name_ = obj.name_;
+        std::cout << "Test(const Test& obj), name:" << name_ << std::endl;
+    }
+
+    Test& operator=(const Test& obj)
+    {
+        this->name_ = obj.name_;
+        std::cout << "Test& operator=(const Test& obj), name:" << name_  << std::endl;
+
+        return *this;
+    }
+
+private:
+    std::string name_;
+};
+
+// Tests whether the object type can be destructed
+void TestObjectDestructed()
+{
+    Stack<Test>* stack = new StackByLinkedList<Test>();
+
+    Test t("t1");
+    stack->Push(t);
+    stack->Pop();
+
+    delete stack;
+
+    getchar();
+}
+
 int main()
 {
-    std::cout << "test_stack..." << std::endl;
+    // std::cout << "test_stack..." << std::endl;
 
-    Stack<int>* stack_by_linked_list = new StackByLinkedList<int>();
-    TestCase(stack_by_linked_list);
+    // Stack<int>* stack_by_linked_list = new StackByLinkedList<int>();
+    // TestCase(stack_by_linked_list);
 
-    std::cout << "test done!" << std::endl;
+    // std::cout << "test done!" << std::endl;
+
+   TestObjectDestructed();
 
     return 0;
 }

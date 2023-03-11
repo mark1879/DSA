@@ -13,7 +13,7 @@ public:
     StackNode()
     {}
 
-    StackNode(T val, StackNode* next)
+    StackNode(const T& val, StackNode* next)
         : val_(val)
         , next_(next)
     {}
@@ -35,7 +35,7 @@ public:
         {
             StackNode<T>* temp = iter;
             iter = iter->next_;
-            delete iter;
+            delete temp;
         }
 
         delete head_;
