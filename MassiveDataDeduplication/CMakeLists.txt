@@ -1,0 +1,3 @@
+add_executable(test_massive_data_deduplication test_massive_data_deduplication.cpp)
+target_link_libraries(test_massive_data_deduplication ${GTEST_BOTH_LIBRARIES})
+
