@@ -95,5 +95,7 @@ int main()
 
     free(data);
 
+    std::cout << "test done!" << std::endl << std::endl;
+
     return 0;
 }

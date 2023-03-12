@@ -21,9 +21,7 @@ int main()
         EXPECT_EQ(skip_list.Find(i), nullptr);
     }
 
-
-
-    std::cout << "test done!" << std::endl;
+    std::cout << "test done!" << std::endl << std::endl;
 
     return 0;
 }

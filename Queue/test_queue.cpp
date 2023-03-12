@@ -68,7 +68,7 @@ int main()
 
     delete queue_by_linked_list;
 
-    std::cout << "test done!" << std::endl;
+    std::cout << "test done!" << std::endl << std::endl;
 
     return 0;
 }
