@@ -1,6 +1,7 @@
-#include "bitmap.hpp"
 #include <iostream>
 #include <gtest/gtest.h>
+#include "bitmap.hpp"
+#include "bloom_filter.hpp"
 
 void TestBitmap()
 {
@@ -18,11 +19,33 @@ void TestBitmap()
     EXPECT_EQ(bitmap1.Exist(0), true);
 }
 
+void TestBloomFilter()
+{
+    std::cout << "test_bloom_filter..." << std::endl;
+    std::vector<std::string> white_list = {
+        "www.baidu.com",
+        "www.qq.com",
+        "www.zhihu.com"
+    };
+
+    BloomFilter bloom_filter; 
+
+    for (const auto& it : white_list)
+    {
+        bloom_filter.SetBit(it);
+        EXPECT_EQ(bloom_filter.GetBit(it), true);
+    }
+
+    std::string black_url = "www.google.com";
+    EXPECT_EQ(bloom_filter.GetBit(black_url), false);
+}
+
 int main()
 {
     std::cout << "test_massive_data_deduplication..." << std::endl;
 
     TestBitmap();
+    TestBloomFilter();
 
     std::cout << "test done!" << std::endl << std::endl;
 
