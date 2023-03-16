@@ -26,7 +26,7 @@ bool HeapSort(int* data, int size_of_data)
     if (data == nullptr || size_of_data <= 0)
         return false;
 
-    // build max heap
+    // build max heap from the second-to-last layer
     for (int i = (size_of_data - 1) / 2; i >= 0; i--)
         _ShiftDown(data, size_of_data, i);
 
