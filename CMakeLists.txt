@@ -11,6 +11,8 @@ include_directories(${GTEST_INCLUDE_DIRS})
 
 include_directories(common/)
 
+add_definitions(-w)
+
 add_subdirectory(B+Tree/)
 add_subdirectory(Array/)
 add_subdirectory(LinkedList/)
@@ -27,3 +29,4 @@ add_subdirectory(Stack/)
 add_subdirectory(Queue/)
 add_subdirectory(MassiveDataDeduplication/)
 add_subdirectory(TrieTree/)
+add_subdirectory(ConsistentHash/)
