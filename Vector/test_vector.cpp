@@ -1,34 +1,34 @@
 #include "vector.hpp"
-
-class Test
-{
-public:
-    Test()
-    {
-        std::cout << "Test()" << std::endl;
-    }
-
-    Test(const Test& src)
-    {
-        std::cout << "Test(const Test&)" << std::endl;
-    }
-
-    ~Test()
-    {
-        std::cout << "~Test()" << std::endl;
-    }
-};
+#include <gtest/gtest.h>
 
 int main()
 {
     std::cout << "test_vector..." << std::endl;
 
-    Vector<Test> vec;
+    Vector<int> vec;
 
-    Test t1;
+    EXPECT_EQ(vec.empty(), true);
 
-    vec.PushBack(t1);
-    vec.PopBack();
+    vec.push_back(1);
+    EXPECT_EQ(vec.empty(), false);
+    EXPECT_EQ(vec.size(), 1);
+    EXPECT_EQ(vec[0], 1);
+
+    int front = vec.front();
+    EXPECT_EQ(front, 1);
+
+    int& reference_fornt = vec.front();
+    reference_fornt = 2;
+    EXPECT_EQ(vec[0], 2);
+
+    int back = vec.back();
+    EXPECT_EQ(back, 2);
+
+    int& reference_back = vec.back();
+    reference_back = 3;
+    EXPECT_EQ(vec[0], 3);
+
+    vec.pop_back();
 
     std::cout << "test done!" << std::endl << std::endl;
 
