@@ -28,7 +28,11 @@ int main()
     reference_back = 3;
     EXPECT_EQ(vec[0], 3);
 
-    vec.pop_back();
+    for (size_t i = 0; i < 100; i++)
+        vec.push_back(i);
+
+    Vector<int> vec_cpy;
+    vec_cpy = vec;
 
     std::cout << "test done!" << std::endl << std::endl;
 
