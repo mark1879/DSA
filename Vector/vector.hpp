@@ -147,7 +147,10 @@ template<typename T, typename Alloc>
 Vector<T>& Vector<T, Alloc>::operator=(Vector<T>&& obj)
 { 
     if (this != &obj)
+    {
+        destroy_self();
         move_from_obj();
+    }
         
     return *this;    
 }

@@ -40,5 +40,4 @@ bool HeapSort(int* data, int size_of_data)
     return true;
 }
 
-
 #endif

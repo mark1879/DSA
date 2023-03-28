@@ -1,22 +1,59 @@
-#include "subset_tree_select_numbers.hpp"
+#include "subset_tree.hpp"
 #include <gtest/gtest.h>
 
-void TestSubsetTreeSelectNumbers(std::vector<int> data, unsigned int min_diff)
+void TestSelectNumbersByCase(const SubsetTree& subset_tree, std::vector<int> data, unsigned int min_diff)
 {
     std::vector<bool> selected_pos(data.size());
-    SelectNumbers selected_numbers;
-    EXPECT_EQ(selected_numbers.GetMinDiff(data, selected_pos), min_diff);
+    EXPECT_EQ(subset_tree.SelectNumbers(data, selected_pos), min_diff);
+}
+
+void TestSelectNumbers()
+{
+    std::cout << "test_select_numbers..." << std::endl;
+
+    SubsetTree subset_tree;
+
+    TestSelectNumbersByCase(subset_tree, {10}, 10);
+    TestSelectNumbersByCase(subset_tree, {10, 20}, 10);
+    TestSelectNumbersByCase(subset_tree, {10, 20, 31}, 1);
+    TestSelectNumbersByCase(subset_tree, {10, 20, 30, 11}, 9);
+}
+
+void TestGetSubsetsByCase(const SubsetTree& subset_tree, std::vector<int> data, std::vector<std::vector<int>> ans)
+{
+    std::vector<std::vector<int>> result;
+    subset_tree.GetSubsets(data, result);
+
+    EXPECT_EQ(result.size(), ans.size());
+
+    for (size_t i = 0, size1 = result.size(); i < size1; i++)
+    {
+        EXPECT_EQ(result[i].size(), ans[i].size());
+
+        for (size_t j = 0, size2 = result[i].size(); j < size2; j++)
+        {
+            EXPECT_EQ(result[i][j], ans[i][j]);
+        }
+    }
+}
+
+void TestGetSubsets()
+{
+    std::cout << "test_get_subsets" << std::endl;
+
+    SubsetTree subset_tree;
+    TestGetSubsetsByCase(subset_tree, {1}, {{1}});
+    TestGetSubsetsByCase(subset_tree, {1, 2}, {{1, 2}, {1}, {2}});
+    TestGetSubsetsByCase(subset_tree, {1, 2, 3}, {{1, 2, 3}, {1, 2}, {1, 3}, {1}, {2, 3}, {2}, {3}});
 }
 
 int main()
 {
     std::cout << "test_back_tracking..." << std::endl;
 
-    TestSubsetTreeSelectNumbers({10}, 10);
-    TestSubsetTreeSelectNumbers({10, 20}, 10);
-    TestSubsetTreeSelectNumbers({10, 20, 31}, 1);
-    TestSubsetTreeSelectNumbers({10, 20, 30, 11}, 9);
-
+    TestSelectNumbers();
+    TestGetSubsets();
+   
     std::cout << "test done!" << std::endl << std::endl;
 
     return 0;
