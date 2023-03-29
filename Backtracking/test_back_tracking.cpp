@@ -47,12 +47,31 @@ void TestGetSubsets()
     TestGetSubsetsByCase(subset_tree, {1, 2, 3}, {{1, 2, 3}, {1, 2}, {1, 3}, {1}, {2, 3}, {2}, {3}});
 }
 
+void TESTSelectNFrom2NByCase(const SubsetTree& subset_tree, std::vector<int> data, unsigned int min_diff)
+{
+    std::vector<bool> selected_pos(data.size());
+    EXPECT_EQ(subset_tree.SelectNFrom2N(data, selected_pos), min_diff);
+}
+
+void TESTSelectNFrom2N()
+{
+    std::cout << "test_select_N_from_2N..." << std::endl;
+
+    SubsetTree subset_tree;
+
+    TESTSelectNFrom2NByCase(subset_tree, {1, 2}, 1);
+    TESTSelectNFrom2NByCase(subset_tree, {1, 2, 3, 4}, 0);
+    TESTSelectNFrom2NByCase(subset_tree, {1, 2, 3, 5}, 1);
+    TESTSelectNFrom2NByCase(subset_tree, {1, 3, 3, 5}, 0);
+}
+
 int main()
 {
     std::cout << "test_back_tracking..." << std::endl;
 
     TestSelectNumbers();
     TestGetSubsets();
+    TESTSelectNFrom2N();
    
     std::cout << "test done!" << std::endl << std::endl;
 
