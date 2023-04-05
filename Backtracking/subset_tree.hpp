@@ -4,25 +4,9 @@
 #include <iostream>
 #include <vector>
 
-class SubsetTree
+class GetSubsets
 {
 public:
-    /**
-        给定一组整数，从里面挑出一组数，让被选择的整数的和，跟剩下的整数的和的差值最小，并输出被选择和未被选择的数。
-    */
-    unsigned int SelectNumbers(const std::vector<int>& data, std::vector<bool>& selected_pos) const
-    {
-        if (data.size() == 0 || data.size() != selected_pos.size())
-            throw std::invalid_argument("data size is 0 or selected_pos size is not equal to data size");
-
-        std::vector<bool> temp_selected_pos(data.size());
-        unsigned int  min_diff = INT_MAX;
-
-        GetMinDiff(data, temp_selected_pos, 0, min_diff, selected_pos);
-
-        return min_diff;
-    }
-    
     /**
         使用给定的整数集合(不重复)，生成全部的子集。
     */
@@ -33,22 +17,6 @@ public:
 
         std::vector<bool> selected_pos(data.size());
         GetSubsets(data, 0, selected_pos, subsets);
-    }
-
-    /**
-        给定2N个整数，从里面挑出N个整数，让选择整数的和，和剩下的整数的和的差值最小，并输出被选择的数。
-    */
-    unsigned int SelectNFrom2N(const std::vector<int>& data, std::vector<bool>& selected_pos) const
-    {
-        if (data.size() == 0 || data.size() % 2 != 0 || data.size() != selected_pos.size())
-            throw std::invalid_argument("data size is 0 or data size is not even or selected_pos size is not equal to data size");
-
-        std::vector<bool> temp_selected_pos(data.size());
-        unsigned int  min_diff = INT_MAX;
-
-        GetMinDiff(data, temp_selected_pos, 0, min_diff, selected_pos);
-
-        return min_diff;
     }
 
 private:
@@ -75,80 +43,34 @@ private:
             GetSubsets(data, index + 1, selected_pos, subsets);
         }
     }
-
-    void GetMinDiff(const std::vector<int>& data, std::vector<bool>& temp_selected_pos, size_t index, unsigned int& min_diff, std::vector<bool>& final_selected_pos) const
-    {
-        if (index == data.size())
-        {
-            int sum_selected_nums = 0;
-            int sum_unselected_nums = 0;
-
-            for (size_t i = 0, size = data.size(); i < size; i++)
-            {
-                if (temp_selected_pos[i])
-                    sum_selected_nums += data[i];
-                else 
-                    sum_unselected_nums += data[i];
-            }
-
-            if (abs(sum_selected_nums - sum_unselected_nums) < min_diff)
-            {
-                min_diff = abs(sum_selected_nums - sum_unselected_nums);
-                final_selected_pos = temp_selected_pos;
-            }
-        }
-        else
-        {
-            temp_selected_pos[index] = true;
-            GetMinDiff(data, temp_selected_pos, index + 1, min_diff, final_selected_pos);
-
-            temp_selected_pos[index] = false;
-            GetMinDiff(data, temp_selected_pos, index + 1, min_diff, final_selected_pos);
-        }
-    }
-
-    void GetMinDiffN2N(const std::vector<int>& data, std::vector<bool>& temp_selected_pos, size_t index, unsigned int& min_diff, std::vector<bool>& final_selected_pos) const
-    {
-        size_t selected_count = std::count(temp_selected_pos.begin(), temp_selected_pos.end(), true);
-
-        if (index == data.size())
-        {
-            if (selected_count == data.size() / 2)
-            {
-                int sum_selected_nums = 0;
-                int sum_unselected_nums = 0;
-
-                for (size_t i = 0, size = data.size(); i < size; i++)
-                {
-                    if (temp_selected_pos[i])
-                        sum_selected_nums += data[i];
-                    else
-                        sum_unselected_nums += data[i];
-                }
-
-                if (abs(sum_selected_nums - sum_unselected_nums) < min_diff)
-                {
-                    min_diff = abs(sum_selected_nums - sum_unselected_nums);
-                    final_selected_pos = temp_selected_pos;
-                }
-            }
-        }
-        else
-        {
-            // 左剪枝
-            if (selected_count < data.size() / 2)
-            {
-                temp_selected_pos[index] = true;
-                GetMinDiffN2N(data, temp_selected_pos, index + 1, min_diff, final_selected_pos);
-                temp_selected_pos[index] = false;
-            }
-
-            // 右剪枝
-            if (selected_count + (data.size() - index - 1) >= (data.size() / 2))
-                 GetMinDiffN2N(data, temp_selected_pos, index + 1, min_diff, final_selected_pos);
-        }
-    }
-
 };
+
+void TestGetSubsetsByCase(const SubsetTree& subset_tree, std::vector<int> data, std::vector<std::vector<int>> ans)
+{
+    std::vector<std::vector<int>> result;
+    subset_tree.GetSubsets(data, result);
+
+    EXPECT_EQ(result.size(), ans.size());
+
+    for (size_t i = 0, size1 = result.size(); i < size1; i++)
+    {
+        EXPECT_EQ(result[i].size(), ans[i].size());
+
+        for (size_t j = 0, size2 = result[i].size(); j < size2; j++)
+        {
+            EXPECT_EQ(result[i][j], ans[i][j]);
+        }
+    }
+}
+
+void TestGetSubsets()
+{
+    std::cout << "test_get_subsets" << std::endl;
+
+    SubsetTree subset_tree;
+    TestGetSubsetsByCase(subset_tree, {1}, {{1}});
+    TestGetSubsetsByCase(subset_tree, {1, 2}, {{1, 2}, {1}, {2}});
+    TestGetSubsetsByCase(subset_tree, {1, 2, 3}, {{1, 2, 3}, {1, 2}, {1, 3}, {1}, {2, 3}, {2}, {3}});
+}
 
 #endif
