@@ -8,7 +8,7 @@
 class TopKByHeap 
 {
 public:
-    std::vector<int> GetTopKMinNums(const std::vector<int>& data, size_t k)
+    std::vector<int> GetTopKMinNums(std::vector<int>& data, size_t k)
     {
         if (k > data.size() || k == 0)
             throw "k is greater than data size or is equals to 0";
@@ -33,7 +33,7 @@ public:
         return max_heap;
     }
 
-    std::vector<int> GetTopKMinNums2(const std::vector<int>& data, size_t k)
+    std::vector<int> GetTopKMinNums2(std::vector<int>& data, size_t k)
     {
         if (k > data.size() || k == 0)
             throw "k is greater than data size or is equals to 0";
@@ -66,7 +66,8 @@ public:
         return top_k_min_nums;
     }
 
-    std::vector<int> GetTopKMinRepetitionNums(const std::vector<int>& data, size_t k)
+    // 获取重复次数最小的 K 个数
+    std::vector<int> GetTopKMinRepetitionNums(std::vector<int>& data, size_t k)
     {
         std::map<int, int> num_counts;
         for (auto key : data)
