@@ -71,6 +71,20 @@ public:
 
     int GetKthMinNum(std::vector<int>& data, size_t kth)
     {
+        if (kth > data.size() || kth == 0)
+            throw "kth is greater than data size or is equals to 0";
+
+        // build min heap
+        std::priority_queue<int, std::vector<int>, std::greater<int>> max_heap(data.begin(), data.end()); 
+
+        for (size_t i = 0; i < kth - 1; i++)
+            max_heap.pop();
+
+        return max_heap.top();
+    }
+
+    int GetKthMinNum2(std::vector<int>& data, size_t kth)
+    {
          size_t size = data.size();
 
          if (kth > size || kth == 0)
@@ -86,20 +100,6 @@ public:
         }
         
         return data[0];
-    }
-
-    int GetKthMinNum2(std::vector<int>& data, size_t kth)
-    {
-        if (kth > data.size() || kth == 0)
-            throw "kth is greater than data size or is equals to 0";
-
-        // build min heap
-        std::priority_queue<int, std::vector<int>, std::greater<int>> max_heap(data.begin(), data.end()); 
-
-        for (size_t i = 0; i < kth - 1; i++)
-            max_heap.pop();
-
-        return max_heap.top();
     }
 
 private:
