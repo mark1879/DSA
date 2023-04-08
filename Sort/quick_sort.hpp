@@ -63,22 +63,24 @@ void _QuickSort(int* data, int left, int right)
     if (left >= right)
         return;
 
+    int pivot_val = data[left];
     int i = left;
     int j = right;
 
     while (i < j)
     {
-        while (data[j] >= data[left] && i < j)
+        while (data[j] >= pivot_val && i < j)
             j--;
 
-        while (data[i] <= data[left] && i < j)
+        while (data[i] <= pivot_val && i < j)
             i++;
 
         if (i < j)
             std::swap(data[i], data[j]);
     }
 
-    std::swap(data[left], data[i]);
+    data[left] = data[i];
+    data[i] = pivot_val;
 
     _QuickSort(data, left, i - 1);
     _QuickSort(data, i + 1, right);
