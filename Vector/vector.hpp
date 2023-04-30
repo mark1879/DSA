@@ -16,9 +16,10 @@ struct Allocator
         free(p);
     }
 
-    void Construct(T* p, const T& val)
+    template<typename Ty>
+    void Construct(T* p, Ty&& val)
     {
-        new (p) T(val);
+        new (p) T(std::forward<Ty>(val));
     }
 
     void Deconstruct(T* p)
@@ -52,7 +53,16 @@ public:
     reference operator[](size_type index) { return begin_[index]; }
     const_reference operator[](size_type index) const { return begin_[index];}
 
-    void push_back(const T& val);
+    template<typename Ty>
+    void push_back(Ty&& val)
+    {
+        if (size_ == capacity_)
+            expand();
+
+        allocator_.Construct(begin_ + size_, std::forward<Ty>(val));
+        ++size_;
+    }
+
     void pop_back();
 
     iterator begin() { return begin_; }
@@ -153,16 +163,6 @@ Vector<T>& Vector<T, Alloc>::operator=(Vector<T>&& obj)
     }
         
     return *this;    
-}
-
-template<typename T, typename Alloc>
-void Vector<T, Alloc>::push_back(const T& val)
-{
-    if (size_ == capacity_)
-        expand();
-
-    allocator_.Construct(begin_ + size_, val);
-    ++size_;
 }
 
 template<typename T, typename Alloc>
