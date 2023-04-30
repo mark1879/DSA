@@ -1,6 +1,8 @@
 #include "vector.hpp"
 #include <gtest/gtest.h>
 
+using namespace DSA;
+
 int main()
 {
     std::cout << "test_vector..." << std::endl;
@@ -31,8 +33,13 @@ int main()
     for (size_t i = 0; i < 100; i++)
         vec.push_back(i);
 
-    Vector<int> vec_cpy;
-    vec_cpy = vec;
+    Vector<int> vec_cpy = vec;
+    // for (size_t i = 0; i < 100; i++)
+    //     vec_cpy.pop_back();
+
+    Vector<int> vec_move = std::move(vec);
+    for (size_t i = 0; i < 100; i++)
+        vec_move.pop_back();
 
     std::cout << "test done!" << std::endl << std::endl;
 
