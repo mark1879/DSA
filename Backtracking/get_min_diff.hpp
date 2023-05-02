@@ -10,7 +10,7 @@ public:
      /**
         给定一组整数，从里面挑出一组数，让被选择的整数的和，跟剩下的整数的和的差值最小，并输出被选择和未被选择的数。
     */
-    unsigned int SelectNumbers(const std::vector<int>& data, std::vector<bool>& selected_pos) const
+    static unsigned int SelectNumbers(const std::vector<int>& data, std::vector<bool>& selected_pos)
     {
         if (data.size() == 0 || data.size() != selected_pos.size())
             throw std::invalid_argument("data size is 0 or selected_pos size is not equal to data size");
@@ -26,7 +26,7 @@ public:
      /**
         给定2N个整数，从里面挑出N个整数，让选择整数的和，和剩下的整数的和的差值最小，并输出被选择的数。
     */
-    unsigned int SelectNFrom2N(const std::vector<int>& data, std::vector<bool>& selected_pos) const
+    static unsigned int SelectNFrom2N(const std::vector<int>& data, std::vector<bool>& selected_pos)
     {
         if (data.size() == 0 || data.size() % 2 != 0 || data.size() != selected_pos.size())
             throw std::invalid_argument("data size is 0 or data size is not even or selected_pos size is not equal to data size");
@@ -39,8 +39,14 @@ public:
         return min_diff;
     }
 
+    static void Test()
+    {
+        TestSelectNumbers();
+        TESTSelectNFrom2N();
+    }
+
 private:
-    void MinDiff(const std::vector<int>& data, std::vector<bool>& temp_selected_pos, size_t index, unsigned int& min_diff, std::vector<bool>& final_selected_pos) const
+   static void MinDiff(const std::vector<int>& data, std::vector<bool>& temp_selected_pos, size_t index, unsigned int& min_diff, std::vector<bool>& final_selected_pos)
     {
         if (index == data.size())
         {
@@ -71,7 +77,7 @@ private:
         }
     }
 
-    void MinDiff2(const std::vector<int>& data, std::vector<bool>& temp_selected_pos, size_t index, unsigned int& min_diff, std::vector<bool>& final_selected_pos) const
+    static void MinDiff2(const std::vector<int>& data, std::vector<bool>& temp_selected_pos, size_t index, unsigned int& min_diff, std::vector<bool>& final_selected_pos)
     {
         size_t selected_count = std::count(temp_selected_pos.begin(), temp_selected_pos.end(), true);
 
@@ -112,55 +118,49 @@ private:
                 MinDiff2(data, temp_selected_pos, index + 1, min_diff, final_selected_pos);
         }
     }
+
+    static void TestSelectNumbersByCase(const GetMinDiff& get_min_diff, std::vector<int> data, unsigned int min_diff)
+    {
+        std::vector<bool> selected_pos(data.size());
+        EXPECT_EQ(get_min_diff.SelectNumbers(data, selected_pos), min_diff);
+    }
+
+    static void TestSelectNumbers()
+    {
+        std::cout << "test_select_numbers..." << std::endl;
+
+        GetMinDiff get_min_diff;
+
+        TestSelectNumbersByCase(get_min_diff, {10}, 10);
+        TestSelectNumbersByCase(get_min_diff, {10, 20}, 10);
+        TestSelectNumbersByCase(get_min_diff, {10, 20, 31}, 1);
+        TestSelectNumbersByCase(get_min_diff, {10, 20, 30, 11}, 9);
+    }
+
+    static void TESTSelectNFrom2NByCase(const GetMinDiff& get_min_diff, std::vector<int> data, unsigned int min_diff)
+    {
+        std::vector<bool> selected_pos(data.size());
+        EXPECT_EQ(get_min_diff.SelectNFrom2N(data, selected_pos), min_diff);
+
+        size_t count = 0;
+        for (const auto& it : selected_pos)
+            if (it == true)
+                ++count;
+
+        EXPECT_EQ(count, selected_pos.size() / 2);
+    }
+
+    static void TESTSelectNFrom2N()
+    {
+        std::cout << "test_select_N_from_2N..." << std::endl;
+
+        GetMinDiff get_min_diff;
+
+        TESTSelectNFrom2NByCase(get_min_diff, {1, 2}, 1);
+        TESTSelectNFrom2NByCase(get_min_diff, {1, 2, 3, 4}, 0);
+        TESTSelectNFrom2NByCase(get_min_diff, {1, 2, 3, 5}, 1);
+        TESTSelectNFrom2NByCase(get_min_diff, {1, 3, 3, 5}, 0);
+    }
 };
-
-void TestSelectNumbersByCase(const GetMinDiff& get_min_diff, std::vector<int> data, unsigned int min_diff)
-{
-    std::vector<bool> selected_pos(data.size());
-    EXPECT_EQ(get_min_diff.SelectNumbers(data, selected_pos), min_diff);
-}
-
-void TestSelectNumbers()
-{
-    std::cout << "test_select_numbers..." << std::endl;
-
-    GetMinDiff get_min_diff;
-
-    TestSelectNumbersByCase(get_min_diff, {10}, 10);
-    TestSelectNumbersByCase(get_min_diff, {10, 20}, 10);
-    TestSelectNumbersByCase(get_min_diff, {10, 20, 31}, 1);
-    TestSelectNumbersByCase(get_min_diff, {10, 20, 30, 11}, 9);
-}
-
-void TESTSelectNFrom2NByCase(const GetMinDiff& get_min_diff, std::vector<int> data, unsigned int min_diff)
-{
-    std::vector<bool> selected_pos(data.size());
-    EXPECT_EQ(get_min_diff.SelectNFrom2N(data, selected_pos), min_diff);
-
-    size_t count = 0;
-    for (const auto& it : selected_pos)
-        if (it == true)
-            ++count;
-
-    EXPECT_EQ(count, selected_pos.size() / 2);
-}
-
-void TESTSelectNFrom2N()
-{
-    std::cout << "test_select_N_from_2N..." << std::endl;
-
-    GetMinDiff get_min_diff;
-
-    TESTSelectNFrom2NByCase(get_min_diff, {1, 2}, 1);
-    TESTSelectNFrom2NByCase(get_min_diff, {1, 2, 3, 4}, 0);
-    TESTSelectNFrom2NByCase(get_min_diff, {1, 2, 3, 5}, 1);
-    TESTSelectNFrom2NByCase(get_min_diff, {1, 3, 3, 5}, 0);
-}
-
-void TestGetMinDiff()
-{
-    TestSelectNumbers();
-    TESTSelectNFrom2N();
-}
 
 #endif
