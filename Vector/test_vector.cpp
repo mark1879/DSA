@@ -33,9 +33,12 @@ int main()
     for (size_t i = 0; i < 100; i++)
         vec.push_back(i);
 
-    Vector<int> vec_cpy = vec;
-    // for (size_t i = 0; i < 100; i++)
-    //     vec_cpy.pop_back();
+    // Vector<int> vec_cpy = vec;   // 赋值构造函数，有未知bug
+
+    Vector<int> vec_cpy;
+    vec_cpy = vec;
+    for (size_t i = 0; i < 100; i++)
+        vec_cpy.pop_back();
 
     Vector<int> vec_move = std::move(vec);
     for (size_t i = 0; i < 100; i++)
