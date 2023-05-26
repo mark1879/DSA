@@ -1,4 +1,5 @@
 #include "adjacent_matrix.hpp"
+#include "adjacent_list.hpp"
 #include "weighted_adjacent_matrix.hpp"
 
 int main()
@@ -6,6 +7,7 @@ int main()
     std::cout << "test_graph..." << std::endl;
 
     AdjacentMatrix::Test();
+    AdjacentList::Test();
     WeightedAdjacentMatrix::Test();
 
     std::cout << "test done!" << std::endl << std::endl;
