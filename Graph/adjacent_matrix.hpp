@@ -147,6 +147,59 @@ public:
         return adjacent_matrix_[vertex1][vertex2];
    }
 
+    void ShortestPath(size_t start, size_t end, std::vector<size_t>& path) const override
+    {
+        if (start >= vertex_count_ || end >= vertex_count_)
+        {
+            LOG_INFO("Vertex out of range");
+            return;
+        }
+        
+        std::vector<bool> visited(vertex_count_, false);
+        std::vector<size_t> prev(vertex_count_, INT_MAX);
+        std::queue<size_t> queue;
+
+        queue.push(start);
+        visited[start] = true;
+
+        while (!queue.empty())
+        {
+            size_t current_vertex = queue.front();
+            if (current_vertex == end)
+                break;
+
+            queue.pop();
+
+            for (size_t i = 0; i < vertex_count_; ++i)
+            {
+                if (adjacent_matrix_[current_vertex][i] && !visited[i])
+                {
+                    queue.push(i);
+                    visited[i] = true;
+                    // 记录每个节点的父节点（来源），用于最后回溯路径
+                    // prev[0] 为 INT_MAX，表示没有父节点
+                    prev[i] = current_vertex;
+                }
+            }
+        }
+
+        if (!visited[end])
+        {
+            LOG_INFO("No path from {} to {}", start, end);
+            return;
+        }
+
+        size_t current_vertex = end;
+        while (current_vertex != start)
+        {
+            path.push_back(current_vertex);
+            current_vertex = prev[current_vertex];
+        }
+        path.push_back(start);
+        std::reverse(path.begin(), path.end());
+    }
+
+
    static void Test()
    {
         std::cout << "AdjacentMatrix::Test()" << std::endl;
@@ -188,6 +241,17 @@ public:
         for (size_t i = 0, size = dfs_order.size(); i < size; ++i)
         {
             EXPECT_EQ(bfs_answer[i], bfs_order[i]);
+        }
+
+         // Test ShortestPath
+        std::vector<size_t> shortest_path;
+        std::vector<size_t> shortest_path_answer = {0, 1, 3};
+        graph->ShortestPath(0, 3, shortest_path);
+
+        EXPECT_EQ(shortest_path.size(), shortest_path_answer.size());
+        for (size_t i = 0, size = shortest_path.size(); i < size; i++)
+        {
+            EXPECT_EQ(shortest_path[i], shortest_path_answer[i]);
         }
 
         // Test RemoveEdge

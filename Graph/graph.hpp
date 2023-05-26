@@ -14,6 +14,7 @@ public:
    virtual bool AddEdge(size_t vertex1, size_t vertex2) = 0;
    virtual bool RemoveEdge(size_t vertex1, size_t vertex2) = 0;
    virtual bool HasEdge(size_t vertex1, size_t vertex2) const = 0;
+   virtual void ShortestPath(size_t start, size_t end, std::vector<size_t>& path) const = 0;
 };
 
 #endif
