@@ -3,37 +3,30 @@
 #include "weighted_graph.hpp"
 #include <stack>
 #include <queue>
+#include <vector>
 #include <gtest/gtest.h>
+#include "Logger.hpp"
 
 class WeightedAdjacentMatrix : public WeightedGraph
 {
+private:
+    size_t vertex_count_;
+    size_t edge_count_;
+    std::vector<std::vector<int>> adjacent_matrix_;
+
+public:
+    const static int kIllegalWeight;
+
 public:
     WeightedAdjacentMatrix(size_t veterx_count)
         : vertex_count_(veterx_count)
         , edge_count_(0)
     {
-        adjacent_matrix_ = new int*[vertex_count_];
-        for (size_t i = 0; i < vertex_count_; ++i)
-        {
-            adjacent_matrix_[i] = new int[vertex_count_];
-            for (size_t j = 0; j < vertex_count_; ++j)
-            {
-                adjacent_matrix_[i][j] = kNoEdge;
-            }
-        }
+        adjacent_matrix_.resize(vertex_count_, std::vector<int>(vertex_count_, kIllegalWeight));
     }
 
     ~WeightedAdjacentMatrix()
-    {
-        if (adjacent_matrix_ != nullptr)
-        {
-            for (size_t i = 0; i < vertex_count_; ++i)
-            {
-                delete[] adjacent_matrix_[i];
-            }
-            delete[] adjacent_matrix_;
-        }
-    }
+    {}
 
     size_t VetextCount() const
     {
@@ -45,118 +38,132 @@ public:
         return edge_count_;
     }
 
-    void BFS(size_t vertex, std::vector<size_t>& order) const
+    bool BFS(size_t start, std::vector<size_t>& order) const
     {
+        if (start >= vertex_count_)
+        {
+            LOG_INFO("start is Out of Range");
+            return false;
+        }
+
         std::vector<bool> visited(vertex_count_, false);
         std::queue<size_t> queue;
 
-        queue.push(vertex);
-        visited[vertex] = true;
+        visited[start] = true;
+        queue.push(start);
 
         while (!queue.empty())
         {
-            size_t current_vertex = queue.front();
+            auto current = queue.front();
             queue.pop();
-            order.push_back(current_vertex);
+            order.push_back(current);
 
-            for (size_t i = 0; i < vertex_count_; ++i)
+            for (size_t i = 0; i < vertex_count_; i++)
             {
-                if (adjacent_matrix_[current_vertex][i] != kNoEdge && !visited[i])
+                if (adjacent_matrix_[current][i] != kIllegalWeight && !visited[i])
                 {
-                    queue.push(i);
                     visited[i] = true;
+                    queue.push(i);
                 }
             }
         }
+
+        return true;
     }
 
-
-    void DFS(size_t vertex, std::vector<size_t>& order) const
+    bool DFS(size_t start, std::vector<size_t>& order) const
     {
-        std::vector<bool> visited(vertex_count_, false);
-        std::stack<size_t> stack;
+       if (start >= vertex_count_)
+       {
+            LOG_INFO("start is Out Of Range");
+            return false;
+       }
 
-        stack.push(vertex);
-        visited[vertex] = true;
+       std::vector<bool> visited(vertex_count_, false);
+       std::stack<size_t> stack;
 
-        while (!stack.empty())
-        {
-            size_t current_vertex = stack.top();
+       stack.push(start);
+       visited[start] = true;
+
+       while (!stack.empty())
+       {    
+            auto current = stack.top();
             stack.pop();
-            order.push_back(current_vertex);
+            order.push_back(current);
 
-            for (size_t i = 0; i < vertex_count_; ++i)
+            for (size_t i = 0; i < vertex_count_; i++)
             {
-                if (adjacent_matrix_[current_vertex][i] != kNoEdge && !visited[i])
+                if (adjacent_matrix_[current][i] != kIllegalWeight && !visited[i])
                 {
                     stack.push(i);
                     visited[i] = true;
                 }
             }
-        }
+       }
+
+       return true;
     }
 
-
-    bool AddEdge(size_t vertex1, size_t vertex2, int weight)
+    bool AddEdge(size_t src, size_t dst, int weight)
     {
-        if (vertex1 >= vertex_count_ || vertex2 >= vertex_count_)
+        if (src >= vertex_count_ || dst >= vertex_count_)
         {
-            LOG_INFO("vertex1 or vertex2 is out of range");
+            LOG_INFO("src or dst is Out of Range");
             return false;
         }
 
-        if (adjacent_matrix_[vertex1][vertex2] != kNoEdge)
+        if (adjacent_matrix_[src][dst] != kIllegalWeight)
         {
             LOG_INFO("Edge already exists");
             return false;
         }
 
-        adjacent_matrix_[vertex1][vertex2] = weight;
+        adjacent_matrix_[src][dst] = weight;
         ++edge_count_;
 
         return true;
     }
 
-    bool RemoveEdge(size_t vertex1, size_t vertex2)
+    bool RemoveEdge(size_t src, size_t dst)
     {
-        if (vertex1 >= vertex_count_ || vertex2 >= vertex_count_)
+        if (src >= vertex_count_ || dst >= vertex_count_)
         {
-            LOG_INFO("vertex1 or vertex2 is out of range");
+            LOG_INFO("src or dst is Out of Range");
             return false;
         }
 
-        if (adjacent_matrix_[vertex1][vertex2] == kNoEdge)
+        if (adjacent_matrix_[src][dst] == kIllegalWeight)
         {
             LOG_INFO("Edge does not exist");
             return false;
         }
 
-        adjacent_matrix_[vertex1][vertex2] = kNoEdge;
+        adjacent_matrix_[src][dst] = kIllegalWeight;
         --edge_count_;
 
         return true;
     }
 
-    bool HasEdge(size_t vertex1, size_t vertex2) const
+    bool HasEdge(size_t src, size_t dst) const
     {
-        if (vertex1 >= vertex_count_ || vertex2 >= vertex_count_)
+        if (src >= vertex_count_ || dst >= vertex_count_)
         {
+            LOG_INFO("src or dst is Out of Range");
             return false;
         }
 
-        return adjacent_matrix_[vertex1][vertex2] != kNoEdge;
+        return adjacent_matrix_[src][dst] != kIllegalWeight;
     }
 
-
-    int  Weight(size_t vertex1, size_t vertex2) const
+    int  Weight(size_t src, size_t dst) const
     {
-        if (vertex1 >= vertex_count_ || vertex2 >= vertex_count_)
+        if (src >= vertex_count_ || dst >= vertex_count_)
         {
-            return kNoEdge;
+            LOG_INFO("src or dst is Out of Range");
+            return kIllegalWeight;
         }
 
-        return adjacent_matrix_[vertex1][vertex2];
-
+        return adjacent_matrix_[src][dst];
     }
 
     static void Test()
@@ -210,13 +217,8 @@ public:
         EXPECT_EQ(graph->RemoveEdge(0, 1), false);
         EXPECT_EQ(graph->RemoveEdge(8, 9), false);
     }
-
-private:
-    size_t vertex_count_;
-    size_t edge_count_;
-    int** adjacent_matrix_;
-    int kNoEdge = 0;
 };
 
+const int WeightedAdjacentMatrix::kIllegalWeight = INT_MIN;
 
 #endif
