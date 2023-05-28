@@ -2,37 +2,26 @@
 #include <queue>
 #include <stack>
 #include <gtest/gtest.h>
+#include <vector>
 #include "logger.hpp"
 
 class AdjacentMatrix : public Graph
 {
+private:
+    size_t vertex_count_;
+    size_t edge_count_;
+    std::vector<std::vector<bool>> adjacent_matrix_;
+
 public:
     AdjacentMatrix(size_t vertex_count)
         : vertex_count_(vertex_count)
         , edge_count_(0)
     {
-        adjacent_matrix_ = new bool*[vertex_count_];
-        for (size_t i = 0; i < vertex_count_; ++i)
-        {
-            adjacent_matrix_[i] = new bool[vertex_count_];
-            for (size_t j = 0; j < vertex_count_; ++j)
-            {
-                adjacent_matrix_[i][j] = false;
-            }
-        }
+        adjacent_matrix_.resize(vertex_count, std::vector<bool>(vertex_count, false));
     }
 
     ~AdjacentMatrix()
-    {
-        if (adjacent_matrix_ != nullptr)
-        {
-            for (size_t i = 0; i < vertex_count_; ++i)
-            {
-                delete[] adjacent_matrix_[i];
-            }
-            delete[] adjacent_matrix_;
-        }
-    }
+    {}
 
     size_t VetextCount() const override
     { 
@@ -44,119 +33,15 @@ public:
         return edge_count_; 
     }
 
-   void BFS(size_t vertex, std::vector<size_t>& order) const override
-   {
-        std::vector<bool> visited(vertex_count_, false);
-        std::queue<size_t> queue;
-
-        queue.push(vertex);
-        visited[vertex] = true;
-
-        while (!queue.empty())
-        {
-            size_t current_vertex = queue.front();
-            queue.pop();
-            order.push_back(current_vertex);
-            
-            for (size_t i = 0; i < vertex_count_; ++i)
-            {
-                if (adjacent_matrix_[current_vertex][i] && !visited[i])
-                {
-                    queue.push(i);
-                    visited[i] = true;
-                }
-            }
-        }
-   }
-
-   void DFS(size_t vertex, std::vector<size_t>& order) const  override
-   {
-        std::vector<bool> visited(vertex_count_, false);
-        std::stack<size_t> stack;
-
-        stack.push(vertex);
-        visited[vertex] = true;
-
-        while (!stack.empty())
-        {
-            size_t current_vertex = stack.top();
-            stack.pop();
-            order.push_back(current_vertex);
-
-            for (size_t i = 0; i < vertex_count_; ++i)
-            {
-                if (adjacent_matrix_[current_vertex][i] && !visited[i])
-                {
-                    stack.push(i);
-                    visited[i] = true;
-                }
-            }
-        }
-   }
-
-   bool AddEdge(size_t vertex1, size_t vertex2) override
-   {
-        if (vertex1 >= vertex_count_ || vertex2 >= vertex_count_)
-        {
-            LOG_INFO("Vertex out of range");
-            return false;
-        }
-
-        if (adjacent_matrix_[vertex1][vertex2])
-        {
-            LOG_INFO("Edge already exists");
-            return false;
-        }
-
-        adjacent_matrix_[vertex1][vertex2] = true;
-        adjacent_matrix_[vertex2][vertex1] = true;
-        ++edge_count_;
-
-        return true;    
-   }
-
-   bool RemoveEdge(size_t vertex1, size_t vertex2) override
-   {
-        if (vertex1 >= vertex_count_ || vertex2 >= vertex_count_)
-        {
-            LOG_INFO("Vertex out of range");
-            return false;
-        }
-
-        if (!adjacent_matrix_[vertex1][vertex2])
-        {
-            LOG_INFO("Edge does not exist");
-            return false;
-        }
-
-        adjacent_matrix_[vertex1][vertex2] = false;
-        adjacent_matrix_[vertex2][vertex1] = false;
-        --edge_count_;
-
-        return true;
-   }
-
-   bool HasEdge(size_t vertex1, size_t vertex2) const override
-   {
-        if (vertex1 >= vertex_count_ || vertex2 >= vertex_count_)
-        {
-            LOG_INFO("Vertex out of range");
-            return false;
-        }
-
-        return adjacent_matrix_[vertex1][vertex2];
-   }
-
-    void ShortestPath(size_t start, size_t end, std::vector<size_t>& path) const override
+    bool BFS(size_t start, std::vector<size_t>& order) const override
     {
-        if (start >= vertex_count_ || end >= vertex_count_)
+        if (start >= vertex_count_)
         {
-            LOG_INFO("Vertex out of range");
-            return;
+            LOG_INFO("start is Out of Range");
+            return false;
         }
-        
+
         std::vector<bool> visited(vertex_count_, false);
-        std::vector<size_t> prev(vertex_count_, INT_MAX);
         std::queue<size_t> queue;
 
         queue.push(start);
@@ -164,39 +49,160 @@ public:
 
         while (!queue.empty())
         {
-            size_t current_vertex = queue.front();
-            if (current_vertex == end)
-                break;
-
+            auto current = queue.front();
             queue.pop();
+            order.push_back(current);
 
-            for (size_t i = 0; i < vertex_count_; ++i)
+            for (size_t i = 0; i < vertex_count_; i++)
             {
-                if (adjacent_matrix_[current_vertex][i] && !visited[i])
+                if (adjacent_matrix_[current][i] && !visited[i])
                 {
                     queue.push(i);
                     visited[i] = true;
-                    // 记录每个节点的父节点（来源），用于最后回溯路径
-                    // prev[0] 为 INT_MAX，表示没有父节点
-                    prev[i] = current_vertex;
+                }
+            }
+        }
+
+        return true;
+    }
+
+   bool DFS(size_t start, std::vector<size_t>& order)  const override
+   {
+        if (start >= vertex_count_)
+        {
+            LOG_INFO("start is Out of Range");
+            return false;
+        }
+
+        std::vector<bool> visited(vertex_count_, false);
+        std::stack<size_t> stack;
+
+        stack.push(start);
+        visited[start] = true;
+
+        while (!stack.empty())
+        {
+            size_t current = stack.top();
+            stack.pop();
+            order.push_back(current);
+
+            for (size_t i = 0; i < vertex_count_; ++i)
+            {
+                if (adjacent_matrix_[current][i] && !visited[i])
+                {
+                    stack.push(i);
+                    visited[i] = true;
+                }
+            }
+        }
+
+        return true;
+   }
+
+   bool AddEdge(size_t src, size_t dst) override
+   {
+        if (src >= vertex_count_ || dst >= vertex_count_)
+        {
+            LOG_INFO("src or dst is Out of Range");
+            return false;
+        }
+
+        if (adjacent_matrix_[src][dst])
+        {
+            LOG_INFO("Edge already exists");
+            return false;
+        }
+
+        adjacent_matrix_[src][dst] = true;
+        adjacent_matrix_[dst][src] = true;
+        ++edge_count_;
+
+        return true;    
+   }
+
+   bool RemoveEdge(size_t src, size_t dst) override
+   {
+       if (src >= vertex_count_ || dst >= vertex_count_)
+        {
+            LOG_INFO("src or dst is Out of Range");
+            return false;
+        }
+
+        if (!adjacent_matrix_[src][dst])
+        {
+            LOG_INFO("Edge does not exist");
+            return false;
+        }
+
+        adjacent_matrix_[src][dst] = false;
+        adjacent_matrix_[src][dst] = false;
+        --edge_count_;
+
+        return true;
+   }
+
+   bool HasEdge(size_t src, size_t dst) const override
+   {
+        if (src >= vertex_count_ || dst >= vertex_count_)
+        {
+            LOG_INFO("src or dst is Out of Range");
+            return false;
+        }
+
+        return adjacent_matrix_[src][dst] && adjacent_matrix_[dst][src];
+   }
+
+    bool ShortestPath(size_t start, size_t end, std::vector<size_t>& path) const override
+    {
+        if (start >= vertex_count_ || end >= vertex_count_)
+        {
+            LOG_INFO("start or end is Out of Range");
+            return false;
+        }
+        
+        std::vector<bool> visited(vertex_count_, false);
+        std::queue<size_t> queue;
+        std::vector<size_t> parents(vertex_count_, INT_MAX);
+
+        visited[start] = true;
+        queue.push(start);
+
+        while (!queue.empty())
+        {
+            auto current = queue.front();
+            queue.pop();
+            
+            if (current == end)
+                break;
+
+            for (size_t i = 0; i < vertex_count_; i++)
+            {
+                if (adjacent_matrix_[current][i] && !visited[i])
+                {
+                    queue.push(i);
+                    visited[i] = true;
+                    parents[i] = current;
                 }
             }
         }
 
         if (!visited[end])
         {
-            LOG_INFO("No path from {} to {}", start, end);
-            return;
+            LOG_INFO("There is no path: %lu -> %lu", start, end);
+            return false;
         }
 
-        size_t current_vertex = end;
-        while (current_vertex != start)
+        auto current = end;
+        while (current != start)
         {
-            path.push_back(current_vertex);
-            current_vertex = prev[current_vertex];
+            path.push_back(current);
+            current = parents[current];
         }
+
         path.push_back(start);
         std::reverse(path.begin(), path.end());
+     
+        return true;
     }
 
 
@@ -262,9 +268,4 @@ public:
         EXPECT_EQ(graph->RemoveEdge(0, 1), false);
         EXPECT_EQ(graph->RemoveEdge(8, 9), false);
    }
-
-private:
-    size_t vertex_count_;
-    size_t edge_count_;
-    bool** adjacent_matrix_;
 };

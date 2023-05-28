@@ -36,98 +36,110 @@ public:
         return edge_count_;
     }
 
-    void BFS(size_t vertex, std::vector<size_t>& order) const override
+    bool BFS(size_t start, std::vector<size_t>& order) const override
     {
-        std::vector<bool> visited(vertex_count_, false);
-        std::queue<size_t> queue;
-
-        queue.push(vertex);
-        visited[vertex] = true;
-
-        while (!queue.empty())
+        if (start >= vertex_count_)
         {
-            size_t current_vertex = queue.front();
-            queue.pop();
-            order.push_back(current_vertex);
-
-            for (size_t i = 0; i < adjacent_list_[current_vertex].size(); ++i)
-            {
-                size_t adjacent_vertex = adjacent_list_[current_vertex][i];
-                if (!visited[adjacent_vertex])
-                {
-                    queue.push(adjacent_vertex);
-                    visited[adjacent_vertex] = true;
-                }
-            }
-        }
-    }
-
-    void DFS(size_t vertex, std::vector<size_t>& order) const override
-    {
-        std::vector<bool> visited(vertex_count_, false);
-        std::stack<size_t> stack;
-
-        stack.push(vertex);
-        visited[vertex] = true;
-
-        while (!stack.empty())
-        {
-            size_t current_vertex = stack.top();
-            stack.pop();
-            order.push_back(current_vertex);
-
-            for (size_t i = 0; i < adjacent_list_[current_vertex].size(); ++i)
-            {
-                size_t adjacent_vertex = adjacent_list_[current_vertex][i];
-                if (!visited[adjacent_vertex])
-                {
-                    stack.push(adjacent_vertex);
-                    visited[adjacent_vertex] = true;
-                }
-            }
-        }
-    }
-
-    bool AddEdge(size_t vertex1, size_t vertex2) override
-    {
-        if (vertex1 >= vertex_count_ || vertex2 >= vertex_count_)
-        {
-            LOG_INFO("Vertex out of range");
+            LOG_INFO("start is Out of Range");
             return false;
         }
 
-        for (size_t i = 0; i < adjacent_list_[vertex1].size(); ++i)
+        std::vector<bool> visited(vertex_count_, false);
+        std::queue<size_t> queue;
+
+        queue.push(start);
+        visited[start] = true;
+
+        while (!queue.empty())
         {
-            if (adjacent_list_[vertex1][i] == vertex2)
+            size_t current = queue.front();
+            queue.pop();
+            order.push_back(current);
+
+            for (const auto& it : adjacent_list_[current])
+            {
+                if (!visited[it])
+                {
+                    queue.push(it);
+                    visited[it] = true;
+                }
+            }
+        }
+    }
+
+    bool DFS(size_t start, std::vector<size_t>& order) const override
+    {
+        if (start >= vertex_count_)
+        {
+            LOG_INFO("start is Out of Range");
+            return false;
+        }
+
+        std::vector<bool> visited(vertex_count_, false);
+        std::stack<size_t> stack;
+
+        stack.push(start);
+        visited[start] = true;
+
+        while (!stack.empty())
+        {
+            size_t current = stack.top();
+            stack.pop();
+            order.push_back(current);
+
+            for (const auto& it : adjacent_list_[current])
+            {
+                if (!visited[it])
+                {
+                    stack.push(it);
+                    visited[it] = true;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    bool AddEdge(size_t src, size_t dst) override
+    {
+        if (src >= vertex_count_ || dst >= vertex_count_)
+        {
+            LOG_INFO("src or dst is Out of Range");
+            return false;
+        }
+
+        for (const auto& it : adjacent_list_[src])
+        {
+            if (it == dst)
             {
                 LOG_INFO("Edge already exists");
                 return false;
             }
         }
 
-        adjacent_list_[vertex1].push_back(vertex2);
-        adjacent_list_[vertex2].push_back(vertex1);
+        adjacent_list_[src].push_back(dst);
+        adjacent_list_[dst].push_back(src);
         ++edge_count_;
 
         return true;
     }
 
-    bool RemoveEdge(size_t vertex1, size_t vertex2)
+    bool RemoveEdge(size_t src, size_t dst)
     {
-        if (vertex1 >= vertex_count_ || vertex2 >= vertex_count_)
+        if (src >= vertex_count_ || dst >= vertex_count_)
         {
-            LOG_INFO("Vertex out of range");
+            LOG_INFO("src or dst is Out of Range");
             return false;
         }
 
         bool deleted = false;
 
-        for (size_t i = 0; i < adjacent_list_[vertex1].size(); ++i)
+        for (auto it =  adjacent_list_[src].begin(); it != adjacent_list_[src].end(); it++)
         {
-            if (adjacent_list_[vertex1][i] == vertex2)
+            if (*it == dst)
             {
                 deleted = true;
-                adjacent_list_[vertex1].erase(adjacent_list_[vertex1].begin() + i);
+                adjacent_list_[src].erase(it);
                 break;
             }
         }
@@ -138,11 +150,11 @@ public:
             return false;
         }
 
-        for (size_t i = 0; i < adjacent_list_[vertex2].size(); ++i)
+        for (auto it =  adjacent_list_[dst].begin(); it != adjacent_list_[dst].end(); it++)
         {
-            if (adjacent_list_[vertex2][i] == vertex1)
+            if (*it == src)
             {
-                adjacent_list_[vertex2].erase(adjacent_list_[vertex2].begin() + i);
+                adjacent_list_[dst].erase(it);
                 break;
             }
         }
@@ -171,10 +183,16 @@ public:
         return false;
     }
 
-    void ShortestPath(size_t start, size_t end, std::vector<size_t>& path) const
+    bool ShortestPath(size_t start, size_t end, std::vector<size_t>& path) const
     {
+        if (start >= vertex_count_ || end >= vertex_count_)
+        {
+            LOG_INFO("start or end is Out of Range");
+            return false;
+        }
+
         std::vector<bool> visited(vertex_count_, false);
-        std::vector<size_t> prev(vertex_count_, INT_MAX);
+        std::vector<size_t> parents(vertex_count_, INT_MAX);
         std::queue<size_t> queue;
 
         queue.push(start);
@@ -182,45 +200,44 @@ public:
 
         while (!queue.empty())
         {
-            size_t current_vertex = queue.front();
-            if (current_vertex == end)
-            {
+            size_t current = queue.front();
+            if (current == end)
                 break;
-            }
 
             queue.pop();
 
-            for (size_t i = 0; i < adjacent_list_[current_vertex].size(); ++i)
+            for (const auto& it : adjacent_list_[current])
             {
-                size_t adjacent_vertex = adjacent_list_[current_vertex][i];
-                if (!visited[adjacent_vertex])
+                if (!visited[it])
                 {
-                    queue.push(adjacent_vertex);
-                    visited[adjacent_vertex] = true;
-                    prev[adjacent_vertex] = current_vertex;
+                    queue.push(it);
+                    visited[it] = true;
+                    parents[it] = current;
                 }
             }
         }
 
         if (!visited[end])
         {
-            LOG_INFO("No path from {} to {}", start, end);
-            return;
+            LOG_INFO("There is no path: %lu -> %lu", start, end);
+            return false;
         }
 
-        size_t current_vertex = end;
-        while (current_vertex != start)
+        size_t current = end;
+        while (current != start)
         {
-            path.push_back(current_vertex);
-            current_vertex = prev[current_vertex];
+            path.push_back(current);
+            current = parents[current];
         }
 
         path.push_back(start);
         std::reverse(path.begin(), path.end());
+
+        return true;
     }
 
-     static void Test()
-   {
+    static void Test()
+    {
         std::cout << "AdjacentList::Test()" << std::endl;
 
         Graph* graph = new AdjacentList(8);
@@ -280,7 +297,7 @@ public:
 
         EXPECT_EQ(graph->RemoveEdge(0, 1), false);
         EXPECT_EQ(graph->RemoveEdge(8, 9), false);
-   }
+    }
 
 };
 
