@@ -15,9 +15,6 @@ private:
     std::vector<std::vector<int>> adjacent_matrix_;
 
 public:
-    const static int kIllegalWeight;
-
-public:
     WeightedAdjacentMatrix(size_t veterx_count)
         : vertex_count_(veterx_count)
         , edge_count_(0)
@@ -28,7 +25,7 @@ public:
     ~WeightedAdjacentMatrix()
     {}
 
-    size_t VetextCount() const
+    size_t VertexCount() const
     {
         return vertex_count_;
     }
@@ -184,7 +181,7 @@ public:
         EXPECT_EQ(graph->AddEdge(2, 6, 4), false);
         EXPECT_EQ(graph->AddEdge(7, 8, 1), false);
 
-        EXPECT_EQ(graph->VetextCount(), 8);
+        EXPECT_EQ(graph->VertexCount(), 8);
         EXPECT_EQ(graph->EdgeCount(), 7);
 
         // Test BFS
@@ -218,7 +215,5 @@ public:
         EXPECT_EQ(graph->RemoveEdge(8, 9), false);
     }
 };
-
-const int WeightedAdjacentMatrix::kIllegalWeight = INT_MIN;
 
 #endif

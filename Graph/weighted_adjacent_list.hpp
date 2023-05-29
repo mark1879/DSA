@@ -15,10 +15,7 @@ private:
     size_t vertex_count_;
     size_t edge_count_;
     // pair<dst, weight>
-    std::vector<std::vector<std::pair<size_t, size_t>>> adjacent_list_;
-    
-public:
-    const static int kIllegalWeight;
+    std::vector<std::vector<std::pair<size_t, int>>> adjacent_list_;
 
 public:
     WeightedAdjacentList(size_t vertex_count)
@@ -31,7 +28,7 @@ public:
     ~WeightedAdjacentList()
     {}
 
-    size_t VetextCount() const override
+    size_t VertexCount() const override
     {
         return vertex_count_;
     }
@@ -209,7 +206,7 @@ public:
         EXPECT_EQ(graph->AddEdge(2, 4, 2), false);
         EXPECT_EQ(graph->AddEdge(7, 8, 1), false);
 
-        EXPECT_EQ(graph->VetextCount(), 8);
+        EXPECT_EQ(graph->VertexCount(), 8);
         EXPECT_EQ(graph->EdgeCount(), 10);
 
         // Test BFS
@@ -249,7 +246,5 @@ public:
         EXPECT_EQ(graph->RemoveEdge(8, 9), false);
     }
 };
-
-const int WeightedAdjacentList::kIllegalWeight = INT_MIN;
 
 #endif
