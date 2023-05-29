@@ -7,7 +7,7 @@ class Graph
 {
 public:
    virtual ~Graph() {}
-   virtual size_t VetextCount() const = 0;
+   virtual size_t VertexCount() const = 0;
    virtual size_t EdgeCount() const = 0;
    virtual bool BFS(size_t start, std::vector<size_t>& order) const = 0;
    virtual bool DFS(size_t start, std::vector<size_t>& order) const = 0;

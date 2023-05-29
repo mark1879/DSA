@@ -23,7 +23,7 @@ public:
     ~AdjacentMatrix()
     {}
 
-    size_t VetextCount() const override
+    size_t VertexCount() const override
     { 
         return vertex_count_; 
     }
@@ -224,7 +224,7 @@ public:
         EXPECT_EQ(graph->AddEdge(2, 6), false);
         EXPECT_EQ(graph->AddEdge(7, 8), false);
 
-        EXPECT_EQ(graph->VetextCount(), 8);
+        EXPECT_EQ(graph->VertexCount(), 8);
         EXPECT_EQ(graph->EdgeCount(), 7);
 
         // Test BFS
