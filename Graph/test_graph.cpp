@@ -2,6 +2,7 @@
 #include "adjacent_list.hpp"
 #include "weighted_adjacent_matrix.hpp"
 #include "weighted_adjacent_list.hpp"
+#include "dijkstra.hpp"
 
 int main()
 {
@@ -11,6 +12,7 @@ int main()
     AdjacentList::Test();
     WeightedAdjacentMatrix::Test();
     WeightedAdjacentList::Test();
+    Dijkstra::Test();
 
     std::cout << "test done!" << std::endl << std::endl;
 
