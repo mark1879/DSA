@@ -21,8 +21,7 @@ public:
         
         visited_.resize(vertex_count, false);
         dist_.resize(vertex_count, WeightedGraph::kIllegalWeight);
-
-        dist_[0] = 0;
+        dist_[src] = 0;
 
         for (size_t i = 0; i < vertex_count; i++)
         {
