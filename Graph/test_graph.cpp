@@ -4,6 +4,7 @@
 #include "weighted_adjacent_list.hpp"
 #include "dijkstra.hpp"
 #include "dijkstra2.hpp"
+#include "floyd.hpp"
 
 int main()
 {
@@ -15,6 +16,7 @@ int main()
     WeightedAdjacentList::Test();
     Dijkstra::Test();
     Dijkstra2::Test();
+    Floyd::Test();
 
     std::cout << "test done!" << std::endl << std::endl;
 
