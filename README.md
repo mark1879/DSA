@@ -1,5 +1,5 @@
 Data Structures and Algorithms
 
-#### Compile
+To build, run:
 
 sh build.sh
